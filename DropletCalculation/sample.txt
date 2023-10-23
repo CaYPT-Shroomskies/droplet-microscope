@@ -1,0 +1,17 @@
+UnitOfLength um
+UnitOfVolume pL
+
+Grid 50
+
+Density 0
+SurfaceTension 73
+
+Outside 60
+
+Pattern 30
+P  60  40
+P -60  40
+P -60 -40
+P  60 -40
+
+Droplet 100 0 0 90 8
