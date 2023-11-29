@@ -1,8 +1,11 @@
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
+import numpy as np 
+
 from OpenGL.GLU import *
 import pymesh
+import math
 
 # Init Code
 
