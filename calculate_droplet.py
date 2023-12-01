@@ -31,6 +31,7 @@ class droplet:
 
 def CalculateSurfaceEnergy(Surface_area_floor): # Thermodynamic energy calculation
     return Surface_area*FloorHydrophobicity # insert an actual equation here cause wtf :sob:
+    
 
 '''
 def DrawCall(COM,SA_F): # Center_of_mass (cm) (one dimensional due to symetry along other axis), Surface_area_floor (cm^2): amount of droplet touching the floor
