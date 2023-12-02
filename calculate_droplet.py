@@ -4,6 +4,8 @@ import pymesh
 import matplotlib.pyplot as plt
 import math
 
+# Units used throughout: mJ, cm, mL, cm^2
+
 # Init Code
 
 # Basic Geometric shape, only applies to droplets symmetric on X and Z axis
@@ -12,8 +14,8 @@ import math
 
 volume = 1 # mL
 surfaceTension = 72 # mJ/m^2
-sl_surface_energy = -1 # Surface energy between solid phase and liquid, measured in mJ/cm^2
-gs_surface_energy = -1 # Surface energy between liquid and gas phase, measured in mJ/cm^2
+sl_surface_energy = 1 # Surface energy between solid phase and liquid, measured in mJ/cm^2
+gs_surface_energy = 1 # Surface energy between liquid and gas phase, measured in mJ/cm^2
 
 
 graph = []
@@ -34,7 +36,7 @@ def gravitationalEnergyIntegral(a,c,k): # a and c belong to the standard equatio
     sum = 0;
     for n in range(k):
         local_volume = (math.pi * c)/(a * k)  * (c - (c* (n/k) ))
-        sum = sum + local_volume #* (c* (n/k) )
+        sum = sum + local_volume  * (c* (n/k)) * 0.098 # volume multiplied by height, mass is 1mL to 1g so its fineee
     return sum/100 
 print(centerMassIntegrate(-0.1,3,100))
 
