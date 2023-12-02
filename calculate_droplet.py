@@ -1,10 +1,7 @@
-import pygame
-from pygame.locals import *
-from OpenGL.GL import *
 import numpy as np 
 
-from OpenGL.GLU import *
 import pymesh
+import matplotlib.pyplot as plt
 import math
 
 # Init Code
@@ -15,11 +12,11 @@ import math
 
 volume = 1 # mL
 surfaceTension = 72 # mJ/m^2
-sl_surface_energy = -1 # Surface energy between solid phase and liquid, measured in mJ/m^2
-gs_surface_energy = -1 # Surface energy between liquid and gas phase, measured in mJ/m^2
+sl_surface_energy = -1 # Surface energy between solid phase and liquid, measured in mJ/cm^2
+gs_surface_energy = -1 # Surface energy between liquid and gas phase, measured in mJ/cm^2
 
 
-
+graph = []
 
 class droplet:
     def __init__(self,com,sa,energy):
@@ -31,6 +28,20 @@ class droplet:
 
 def CalculateSurfaceEnergy(Surface_area_floor): # Thermodynamic energy calculation
     return Surface_area*FloorHydrophobicity # insert an actual equation here cause wtf :sob:
+
+
+def gravitationalEnergyIntegral(a,c,k): # a and c belong to the standard equation form ax^2 + c
+    sum = 0;
+    for n in range(k):
+        local_volume = (math.pi * c)/(a * k)  * (c - (c* (n/k) ))
+        sum = sum + local_volume #* (c* (n/k) )
+    return sum/100 
+print(centerMassIntegrate(-0.1,3,100))
+
+
+plt.plot(np.array(graph))
+plt.show()
+
     
 
 '''
