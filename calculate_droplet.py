@@ -18,7 +18,7 @@ Parabaloid visualization
 ## DROPLET VARIABLES
 
 volume = 1 # mL
-sl_se_constant = 1 # Surface energy between solid phase and liquid, measured in mJ/cm^2
+sl_se_constant = 100 # Surface energy between solid phase and liquid, measured in mJ/cm^2
 gl_se_constant = 72 # Surface energy between liquid and gas phase, measured in mJ/cm^2
 
 
@@ -27,7 +27,7 @@ initialShape = 0.25/volume # initial [a] value for the paraboloid
 initialStepSize = 0.05
 stepSizeGeometry = 0.5 # amount to multiply step value by at each split.
 watchdogTimeoutThreshold = 10000 # Timeout counter
-precision = 5 # Amount of geometric decreases in step size
+precision = 3 # Amount of geometric decreases in step size
 
 
 gravitationalPrecision = 100
@@ -48,7 +48,7 @@ def gasPhaseEnergy(a,c):
     area = 0
     for n in range(1,arcPrecision):
         # just the pythagagorean of segment length and delta y, multiplied by circumference to get the surface area
-        area += (math.pi*2*radius)* math.sqrt((segment_length^2)+( ((-a*(segment_length*n)^2)+c) -((-a*(segment_length*(n -1 ))^2)+c))^2)
+        area += (math.pi*2*radius)* math.sqrt((segment_length**2)+( ((-a*(segment_length*n)**2)+c) -((-a*(segment_length*(n -1 ))**2)+c))**2)
 
     return area * gl_se_constant
 
@@ -56,9 +56,8 @@ def gravitationalEnergyIntegral(a,c): # a and c belong to the standard equation 
     sum = 0
     k = gravitationalPrecision
     for n in range(k):
-        local_volume = -(math.pi * c)/(a * k)  * (c - (c* (n/k) ));
-        sum += local_volume  * (c* (n/k)) * 0.098 # volume multiplied by height and gravitational constant, mass is 1mL to 1g so its fineee
-
+        sum -= ( (math.pi)*(c**3)*(n**2)*(0.098) ) / ( (k**3)*a )  # volume multiplied by height and gravitational constant
+    print("Eg = "+str(sum))
     return sum
 
 def drawParaboloid(a):
@@ -87,8 +86,8 @@ graph = []
 stepSize = initialStepSize
 
 # Determine Initial direction
-lastEnergy = getEnergy(lastShape)
-upEnergy = getEnergy(lastShape+stepSize)
+lastEnergy,_ = getEnergy(lastShape)
+upEnergy,_ = getEnergy(lastShape+stepSize)
 if upEnergy > lastEnergy:
     stepSize *= -1 # If a positive step increases energy, reflect step.
 
@@ -102,17 +101,20 @@ while watchdog < watchdogTimeoutThreshold and geometricRepeats < precision:
     if stepEnergy > lastEnergy: # If energy is greater than the last step, reverse direction and make step smaller
         stepSize *= -(stepSizeGeometry)
         geometricRepeats += 1
-    
+    #print(str(stepEnergy)+" mJ" )
     lastEnergy,lastShape = stepEnergy,a # Update runtime values for next iteration
 
     watchdog += 1
 
 if geometricRepeats >= precision:
     print("Minimum energy reached.")
+    print(str(lastEnergy)+" mJ" )
+    print("Used "+str(watchdog)+" steps.")
+    print("Graph parameters: a = "+str(graph[-1][1])+", c = "+str(graph[-1][2]))
 else:
     print("Watchdog timed out.")
-    
 
+exit()
 
-plt.plot(np.array(graph))
-plt.show()
+#plt.plot(np.array(graph))
+#plt.show()
