@@ -31,6 +31,7 @@ precision = 5 # Amount of geometric decreases in step size
 
 
 gravitationalPrecision = 100
+arcPrecision = 200 # amount of arcs represented in quarter parabola multiplied into area.
 
 
 ## FUNCTIONS
@@ -40,12 +41,21 @@ def floorEnergy(a,c):
 
 def gasPhaseEnergy(a,c):
     # get the surface area through a line integral of the length of the parabolic curve
-    return
+
+    radius = math.sqrt(c/a) # Radius of base of paraboloid
+    segment_length = radius/arcPrecision
+    
+    area = 0
+    for n in range(1,arcPrecision):
+        # just the pythagagorean of segment length and delta y, multiplied by circumference to get the surface area
+        area += (math.pi*2*radius)* math.sqrt((segment_length^2)+( ((-a*(segment_length*n)^2)+c) -((-a*(segment_length*(n -1 ))^2)+c))^2)
+
+    return area * gl_se_constant
 
 def gravitationalEnergyIntegral(a,c): # a and c belong to the standard equation form ax^2 + c. k is the precision value.
     sum = 0
     k = gravitationalPrecision
-    for n in range(k): # intgral here uh i l l explain later mb
+    for n in range(k):
         local_volume = -(math.pi * c)/(a * k)  * (c - (c* (n/k) ));
         sum += local_volume  * (c* (n/k)) * 0.098 # volume multiplied by height and gravitational constant, mass is 1mL to 1g so its fineee
 
@@ -54,8 +64,9 @@ def gravitationalEnergyIntegral(a,c): # a and c belong to the standard equation 
 def drawParaboloid(a):
     # \ -a\left(x^{2}+y^{2}\ \right)+c\ \left\{z>0\right\}
     # just set the integral to be equal to the volume and solve for it :pleading_face: bro the 3d integral tho
-    c = 1.5
-    return c
+
+    # nvm we just do the funny thing with the paraboloid equation
+    return math.sqrt(volume*2*a/math.pi)
 
 
 def getEnergy(a):
