@@ -17,21 +17,21 @@ Parabaloid visualization
 
 ## CONSTANTS ##
 
-volume = 10 # mL
+volume = 1 # mL
 
 # [[MEASURED IN J/m^2 BC ITS STANDARD]]
-sl_se_constant = -0.07 # Surface energy between solid phase and liquid, measured in J/m^2
+sl_se_constant = 0.08 # Surface energy between solid phase and liquid, measured in J/m^2
 gl_se_constant = 0.072 # Surface energy between liquid and gas phase, measured in J/m^2
 
-gravity = 9.81 # cm/s^s
+gravity = 9.81 # m/s^s
 
 
 ## PRECISION VARIABLES ##
-initialShape = - 0.5/volume # initial [a] value for the paraboloid
-initialStepSize = 0.05/volume
+initialShape = - 0.1 # initial [a] value for the paraboloid
+initialStepSize = 0.01
 stepSizeGeometry = 0.5 # amount to multiply step value by at each split.
 watchdogTimeoutThreshold = 100000 # Timeout counter
-precision = 4 # Amount of geometric decreases in step size [Dont go over 50, FP limits are hit far below that]
+precision = 8 # Amount of geometric decreases in step size [Dont go over 50, FP limits are hit far below that]
 
 
 gravitationalPrecision = 50
@@ -56,9 +56,8 @@ def gasPhaseEnergy(a,c):
 
     area = 0
     for n in range(1,arcPrecision):
-        # just the pythagagorean of segment length and delta y, multiplied by circumference to get the surface area
-        area += (math.pi*2*radius)* math.sqrt((segment_length**2)+( ((-a*(segment_length*n)**2)+c) -((-a*(segment_length*(n -1 ))**2)+c))**2)
-
+        # the pythagagorean of segment length and delta y, multiplied by circumference to get the surface area
+        area += (math.pi*2*segment_length*n)* math.sqrt( (segment_length**2) +( ((-a*(segment_length*n)**2)+c) -((-a*(segment_length*(n -1 ))**2)+c))**2)
     return area * gl_se_constant
 
 
@@ -67,7 +66,6 @@ def gravitationalEnergy(a,c): # a and c belong to the standard equation form ax^
     k = gravitationalPrecision
     for n in range(k):
         sum -= ( (math.pi)*(c**3)*(n**2)*(gravity/100) ) / ( (k**3)*a )  # volsume multiplied by height and gravitational constant
-    print("Eg "+str(sum))
     return sum
 
 def drawParaboloid(a):
@@ -103,7 +101,7 @@ if upEnergy > lastEnergy:
     stepSize *= -1 # If a positive step increases energy, reflect step.
 
 # Minimization loop
-while watchdog < watchdogTimeoutThreshold and geometricRepeats < precision:
+while geometricRepeats < precision:
     a = lastShape+stepSize
     stepEnergy,c = getEnergy(a)
 
@@ -113,20 +111,25 @@ while watchdog < watchdogTimeoutThreshold and geometricRepeats < precision:
         stepSize *= -(stepSizeGeometry)
         geometricRepeats += 1
 
-    #print(str(stepEnergy)+" mJ" )
+    # Some debugging lines
+    print(str(stepEnergy)+" mJ" )
+    #print("Curvature Value: "+str(a))
+
     lastEnergy,lastShape = stepEnergy,a # Update runtime values for next iteration
 
     watchdog += 1
+    if watchdog > watchdogTimeoutThreshold:
+        print("Watchdog timeout")
+        exit()
 
-if geometricRepeats >= precision:
-    print("Minimum energy reached.")
-    print(str(lastEnergy)+" mJ" )
-    print("Used "+str(watchdog)+" steps.")
-    print("Graph parameters: a = "+str(graph[-1][1])+", c = "+str(graph[-1][2]))
-else:
-    print("Watchdog timed out.")
+print("Minimum energy reached.\n"+str(lastEnergy)+" mJ" )
+print("Used "+str(watchdog)+" steps.")
+print("Graph parameters: a = "+str(graph[-1][1])+", c = "+str(graph[-1][2]))
 
 
+
+'''
+# show energy-[a] curve
 a_list = []
 e_list = []
 for i in graph:
@@ -134,7 +137,8 @@ for i in graph:
 
     a_list.append(graph[1])
 
-#plt.plot(np.array(a_list),np.array(e_list))
-#plt.show()
+plt.plot(np.array(a_list),np.array(e_list))
+plt.show()
+'''
 
 #exit()
