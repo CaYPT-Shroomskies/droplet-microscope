@@ -17,7 +17,7 @@ Parabaloid visualization
 
 ## CONSTANTS ##
 
-volume = 1 # mL
+volume = 3 # mL
 
 # [[MEASURED IN J/m^2 BC ITS STANDARD]]
 sl_se_constant = 0.08 # Surface energy between solid phase and liquid, measured in J/m^2
@@ -141,4 +141,19 @@ plt.plot(np.array(a_list),np.array(e_list))
 plt.show()
 '''
 
-#exit()
+
+# Graphing portion
+current_a = 0
+maximum_a = 2
+precise = 0.01 # amount to tick by
+
+x = []
+y = []
+
+while current_a < maximum_a:
+    current_a += precise
+    y.append(getEnergy(-current_a)[0])
+    x.append(current_a)
+
+plt.plot(np.array(x),np.array(y))
+plt.show()
