@@ -12,7 +12,6 @@ Works on the basis:
 
 https://www.desmos.com/3d/499e8aa617
 Parabaloid visualization
-
 '''
 
 ## CONSTANTS ##
