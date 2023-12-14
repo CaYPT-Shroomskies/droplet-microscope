@@ -31,7 +31,7 @@ initialShape = - 0.1 # initial [a] value for the paraboloid
 initialStepSize = 0.01
 stepSizeGeometry = 0.5 # amount to multiply step value by at each split.
 watchdogTimeoutThreshold = 100000 # Timeout counter
-precision = 8 # Amount of geometric decreases in step size [Dont go over 50, FP limits are hit far below that]
+precision = 4 # Amount of geometric decreases in step size [Dont go over 50, FP limits are hit far below that]
 
 
 gravitationalPrecision = 50
@@ -41,6 +41,8 @@ arcPrecision = 100 # amount of arcs represented in quarter parabola multiplied i
 gl_se_constant *= (1000 / 10000) # mJ/J and cm^2/m^2
 sl_se_constant *= (1000 / 10000) # mJ/J and cm^2/m^2
 
+# Coding Values
+debug = False
 
 ## FUNCTIONS ##
 
@@ -112,7 +114,8 @@ while geometricRepeats < precision:
         geometricRepeats += 1
 
     # Some debugging lines
-    print(str(stepEnergy)+" mJ" )
+    if debug:
+        print(str(stepEnergy)+" mJ" )
     #print("Curvature Value: "+str(a))
 
     lastEnergy,lastShape = stepEnergy,a # Update runtime values for next iteration
@@ -122,6 +125,7 @@ while geometricRepeats < precision:
         print("Watchdog timeout")
         exit()
 
+lastEnergy = math.floor(lastEnergy*(10**precision))/(10**precision)
 print("Minimum energy reached.\n"+str(lastEnergy)+" mJ" )
 print("Used "+str(watchdog)+" steps.")
 print("Graph parameters: a = "+str(graph[-1][1])+", c = "+str(graph[-1][2]))
@@ -141,7 +145,7 @@ plt.plot(np.array(a_list),np.array(e_list))
 plt.show()
 '''
 
-
+'''
 # Graphing portion
 current_a = 0
 maximum_a = 2
@@ -157,3 +161,5 @@ while current_a < maximum_a:
 
 plt.plot(np.array(x),np.array(y))
 plt.show()
+
+'''
