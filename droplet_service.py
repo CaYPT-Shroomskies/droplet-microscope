@@ -1,11 +1,8 @@
 ## Serves as a utility function for the droplet code.
+## Code for utilizing this script can be found in droplet graph thingy
+## 
+## Essentially this script just acts as a module, and you can call it with a 'droplet_params' class that describes the droplet you're attempting to simulate.
 ##
-##
-##
-##
-
-
-
 
 ## MODULES
 import numpy as np 
