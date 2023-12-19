@@ -19,6 +19,7 @@ Works on the basis:
 https://www.desmos.com/3d/499e8aa617
 Parabaloid visualization
 '''
+
 class droplet_params():                                                                                                                                                                
     def __init__(self,volume=3,gl_se_constant=0.072,sl_se_constant=0.08):
         self.volume = volume
