@@ -1,3 +1,6 @@
+## Deprecated in favor of droplet_service script
+## Please do not edit this script, it will be deleted upon service completion
+
 ## MODULES
 import numpy as np 
 import matplotlib.pyplot as plt
