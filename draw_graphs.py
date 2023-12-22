@@ -16,7 +16,7 @@ UTILIZE:
 
 # Class that our droplet_service module accepts as input
 class droplet_params():                                                                                                                                                                                    
-    def __init__(self,volume=3,gl_se_constant=0.072,sl_se_constant=0.08):
+    def __init__(self,volume=3,gl_se_constant=0.073,sl_se_constant=0.08):
         self.volume = volume #mL
         self.sl_se_constant = sl_se_constant # J/m^2
         self.gl_se_constant = gl_se_constant # J/m^2
@@ -96,6 +96,10 @@ def drawHeightSurfaceSolid():
     plt.ylabel("Height (cm)")
     plt.show()
 
+def draw_droplet():
+    droplet = droplet_params()
+    results = module.basic_solve(droplet)
+    a = results
 
 
 drawHeightVolume()
