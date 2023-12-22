@@ -123,7 +123,7 @@ def draw_droplet():
     plt.show()
 
 
-#drawHeightVolume()
-#drawHeightSurfaceGasEnergy()
-#drawHeightSurfaceSolid()
+drawHeightVolume()
+drawHeightSurfaceGasEnergy()
+drawHeightSurfaceSolid()
 draw_droplet()
