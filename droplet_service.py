@@ -44,10 +44,10 @@ def basic_solve(droplet):
     initialStepSize = 0.03
     stepSizeGeometry = 0.5 # amount to multiply step value by at each split.
     watchdogTimeoutThreshold = 100000 # Timeout counter
-    precision = 10 # Amount of geometric decreases in step size [Dont go over 50, FP limits are hit far below that]
+    precision = 10 # Amount of geometric decreases in step size [Dont go over 30, FP limits are hit far below that]
 
 
-    gravitationalPrecision = 10 # Amount of slices of parabola for which Eg is calculated.
+    gravitationalPrecision = 30 # Amount of slices of parabola for which Eg is calculated.
     arcPrecision = 100 # amount of arcs represented in quarter parabola multiplied into area.
 
 

@@ -2,6 +2,7 @@
 import droplet_service as module
 import numpy as np
 import matplotlib.pyplot as plt
+import math
 
 '''
 UTILIZE:
@@ -99,9 +100,30 @@ def drawHeightSurfaceSolid():
 def draw_droplet():
     droplet = droplet_params()
     results = module.basic_solve(droplet)
-    a = results
+    a = results.a_curve
+    c = results.height
+
+    x_graph = []
+    y_graph = []
+    intercepts = abs(math.sqrt(-4*a*c)/(2*a)) # Quadratic solve for X intercepts
+    print(intercepts)
+    precision = 30
+    for i in range(1,precision):
+        x_value = -intercepts+(intercepts*2*(i/precision))
+        x_graph.append(x_value)
+        y_graph.append( (a * (x_value**2)) + c )
+    plt.plot(np.array(x_graph),np.array(y_graph))
+    plt.title("Droplet Shape (Cross-section)")
+    plt.xlabel("Length (cm)")
+    plt.ylabel("Height (cm)")
+
+    plt.xlim(-intercepts, intercepts)
+    plt.ylim(0, intercepts*2)
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.show()
 
 
-drawHeightVolume()
-drawHeightSurfaceGasEnergy()
-drawHeightSurfaceSolid()
+#drawHeightVolume()
+#drawHeightSurfaceGasEnergy()
+#drawHeightSurfaceSolid()
+draw_droplet()
