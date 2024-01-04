@@ -88,6 +88,8 @@ for y in range(resolution):
             magnitude = two_map[rad_dist]/rad_dist
             dist_x *= magnitude
             dist_y *= magnitude
+        if rad_dist == visualization_radius:
+            color = 120
 
         # Return origin to 0,0 for rendering
         dist_x += resolution/2
