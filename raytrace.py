@@ -9,11 +9,23 @@ import droplet_service as module
 
 # Variables
 index_refraction = 1.33 # water bc air really doesnt matter
-resolution = 1000
+resolution = 500
 block_size = 50 # Size of black and white tiles (px)
 viewpoint_height = "ADD LATER :sob:" # bc ur infinitely far away and we dont want pincushion distortion
 # Runtime Variables
-visualization_radius = 400 # radius of droplet in pixels
+visualization_radius = 200 # radius of droplet in pixels
+
+# UNSAFE - SHARED CLASS TYPE, CHECK WITH [draw_graphs.py]
+class droplet_params():                                                                                                                                                                                    
+    def __init__(self,volume=3,gl_se_constant=0.073,sl_se_constant=0.08):
+        self.volume = volume #mL
+        self.sl_se_constant = sl_se_constant # J/m^2
+        self.gl_se_constant = gl_se_constant # J/m^2
+
+
+droplet = droplet_params(
+    volume = 1,
+)
 
 # General Functions
 def start_progress(title):
@@ -33,16 +45,9 @@ def end_progress():
     sys.stdout.write("#" * (40 - progress_x) + "]\n")
     sys.stdout.flush()
 
-# UNSAFE - SHARED CLASS TYPE, CHECK WITH [draw_graphs.py]
-class droplet_params():                                                                                                                                                                                    
-    def __init__(self,volume=3,gl_se_constant=0.073,sl_se_constant=0.08):
-        self.volume = volume #mL
-        self.sl_se_constant = sl_se_constant # J/m^2
-        self.gl_se_constant = gl_se_constant # J/m^2
 
 two_map = [] # For any given radius position, returns the refracted position
 # Calculate 2D vector relative to distance
-droplet = droplet_params()
 results = module.basic_solve(droplet)
 derivative = results.a_curve * 2
 radius = numpy.sqrt(-results.height/results.a_curve)
