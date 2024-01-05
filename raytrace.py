@@ -9,11 +9,11 @@ import droplet_service as module
 
 # Variables
 index_refraction = 1.33 # water bc air really doesnt matter
-resolution = 1000
+resolution = 650
 block_size = 100 # Size of black and white tiles (px)
 viewpoint_height = "ADD LATER :sob:" # bc ur infinitely far away and we dont want pincushion distortion
 # Runtime Variables
-visualization_radius = 500 # radius of droplet in pixels
+visualization_radius = 300 # radius of droplet in pixels
 
 # UNSAFE - SHARED CLASS TYPE, CHECK WITH [draw_graphs.py]
 class droplet_params():                                                                                                                                                                                    
@@ -50,15 +50,18 @@ def end_progress():
 two_map = [] # For any given radius position, returns the refracted position
 # Calculate 2D vector relative to distance
 results = module.basic_solve(droplet)
-derivative = results.a_curve * 2
 radius = numpy.sqrt(-results.height/results.a_curve)
 
 # Just solve for a 2D parabola ray map
 for i in range(visualization_radius):
     current_rad = radius * i / visualization_radius
-    incidence_angle = numpy.arctan(derivative*current_rad)
+     
+    incidence_angle = numpy.arctan(results.a_curve * 2*current_rad) # take the derivative of the current x position (always negative)
+
     light_angle = 0 # add later if there's a viewpoint height
-    refracted_angle = numpy.arcsin(numpy.sin(incidence_angle)/index_refraction)
+
+    refracted_angle = numpy.arcsin(numpy.sin(incidence_angle)/index_refraction) # that one guys law (shell???)
+
     slope = numpy.tan(refracted_angle)
     intersection_height = results.a_curve*(current_rad**2) + results.height
     final_position = current_rad + (intersection_height*slope)
@@ -69,7 +72,7 @@ for i in range(visualization_radius):
 
 pygame.init()
 window = pygame.display.set_mode((resolution, resolution))
-window.fill((255,255,255))
+window.fill((120,120,120))
 pygame.display.flip
 pxarray = pygame.PixelArray(window)
 
@@ -101,12 +104,14 @@ for y in range(resolution):
         
         pxarray[x, y] = pygame.Color(color, color, color)
 
+    pygame.display.flip() # Remove to save like 10% of the time for interp + compi.
+
     progress(int((y/resolution)*100))
 
 end_progress()
 print("Trace Time: "+str( 1000*(time.process_time()-timer))+"ms")
 
-pxarray.close()
+#pxarray.close()
 
 pygame.display.flip()
 
