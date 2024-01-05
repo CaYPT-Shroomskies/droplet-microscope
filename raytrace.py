@@ -9,11 +9,11 @@ import droplet_service as module
 
 # Variables
 index_refraction = 1.33 # water bc air really doesnt matter
-resolution = 500
-block_size = 50 # Size of black and white tiles (px)
+resolution = 1000
+block_size = 100 # Size of black and white tiles (px)
 viewpoint_height = "ADD LATER :sob:" # bc ur infinitely far away and we dont want pincushion distortion
 # Runtime Variables
-visualization_radius = 200 # radius of droplet in pixels
+visualization_radius = 500 # radius of droplet in pixels
 
 # UNSAFE - SHARED CLASS TYPE, CHECK WITH [draw_graphs.py]
 class droplet_params():                                                                                                                                                                                    
@@ -25,6 +25,7 @@ class droplet_params():
 
 droplet = droplet_params(
     volume = 1,
+    sl_se_constant = 0.01
 )
 
 # General Functions
