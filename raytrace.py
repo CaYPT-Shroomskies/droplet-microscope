@@ -1,6 +1,8 @@
 # Modules
+
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+
 import pygame
 import numpy
 import sys
@@ -8,12 +10,19 @@ import time
 import droplet_service as module
 
 # Variables
-index_refraction = 1.33 # water bc air really doesnt matter
-resolution = 650
-block_size = 100 # Size of black and white tiles (px)
-viewpoint_height = "ADD LATER :sob:" # bc ur infinitely far away and we dont want pincushion distortion
-# Runtime Variables
-visualization_radius = 300 # radius of droplet in pixels
+index_refraction_water = 1.33
+index_refraction_glass = 1.52
+
+resolution = 1000
+block_size = 50 # Size of black and white tiles (px)
+visualization_radius = 400 # radius of droplet in pixels
+
+
+
+viewpoint_height = 3 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
+platform_height = 3 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
+platform_thickness = 1 # Thickness of the glass panel
+
 
 # UNSAFE - SHARED CLASS TYPE, CHECK WITH [draw_graphs.py]
 class droplet_params():                                                                                                                                                                                    
@@ -52,20 +61,36 @@ two_map = [] # For any given radius position, returns the refracted position
 results = module.basic_solve(droplet)
 radius = numpy.sqrt(-results.height/results.a_curve)
 
-# Just solve for a 2D parabola ray map
-for i in range(visualization_radius):
+# Solve for a 2D parabola ray map (see visualization)
+two_map.append(0) # insert first bc scalar divides are horrible
+
+for i in range(1,visualization_radius):
+
+    # Current Ray Direction for a point on the droplet plane (cm)
     current_rad = radius * i / visualization_radius
-     
-    incidence_angle = numpy.arctan(results.a_curve * 2*current_rad) # take the derivative of the current x position (always negative)
+    # Solve for air-to-water refraction
+    intersection_height = results.a_curve*(current_rad**2) + results.height # Solve the equation
+    tangent_angle = numpy.arctan(results.a_curve * 2*current_rad) # take the derivative of the current x position (always negative), then convert it to radians
+    light_angle = numpy.arctan(current_rad/platform_height) # add later if there's a viewpoint height
+    normalized_angle = tangent_angle+light_angle
 
-    light_angle = 0 # add later if there's a viewpoint height
-
-    refracted_angle = numpy.arcsin(numpy.sin(incidence_angle)/index_refraction) # that one guys law (shell???)
+    refracted_angle = numpy.arcsin(numpy.sin(normalized_angle)/index_refraction_water)-tangent_angle # that one guys law (shell???) # DOUBLE CHECK TANGENT ANGLE SUBTRACTION GEOMETRY #
 
     slope = numpy.tan(refracted_angle)
-    intersection_height = results.a_curve*(current_rad**2) + results.height
-    final_position = current_rad + (intersection_height*slope)
-    two_map.append( (final_position/radius) * visualization_radius )
+    final_position = current_rad + (intersection_height*slope) # Position when intersecting with glass
+
+    # Glass-Water 
+    refracted_angle = numpy.arcsin(numpy.sin(refracted_angle)*index_refraction_water/index_refraction_glass)
+    slope = numpy.tan(refracted_angle)
+    final_position += platform_thickness*slope
+
+    # Glass-Air
+    refracted_angle = numpy.arcsin(numpy.sin(refracted_angle)*index_refraction_glass)
+    slope = numpy.tan(refracted_angle)
+    final_position += platform_height*slope
+    
+    predicted_position = (current_rad/platform_height)*(platform_height+platform_thickness+viewpoint_height)
+    two_map.append(final_position/predicted_position) # Append a ratio value, ratio to straight-line final position on OBJECT PLANE
 
 # wrap to 3D and apply to grid
     
@@ -89,12 +114,15 @@ for y in range(resolution):
         rad_dist = int(numpy.sqrt(dist_x**2+dist_y**2))  # Distance from droplet
 
         if rad_dist < visualization_radius -1 and rad_dist != 0:
-            magnitude = two_map[rad_dist]/rad_dist
+            magnitude = two_map[rad_dist]
             dist_x *= magnitude
             dist_y *= magnitude
-        if rad_dist == visualization_radius:
-            color = 120
-
+        elif rad_dist == visualization_radius:
+            color = 200
+        #else: # Adjust for z-height
+            #dist_x *= (platform_thickness+platform_height+viewpoint_height)/viewpoint_height
+            #dist_y *= (platform_thickness+platform_height+viewpoint_height)/viewpoint_height
+            
         # Return origin to 0,0 for rendering
         dist_x += resolution/2
         dist_y += resolution/2
