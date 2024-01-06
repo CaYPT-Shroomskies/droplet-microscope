@@ -19,8 +19,8 @@ visualization_radius = 400 # radius of droplet in pixels
 
 
 
-viewpoint_height = 3 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
-platform_height = 3 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
+viewpoint_height = 20 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
+platform_height = 10 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
 platform_thickness = 1 # Thickness of the glass panel
 
 
@@ -61,10 +61,12 @@ two_map = [] # For any given radius position, returns the refracted position
 results = module.basic_solve(droplet)
 radius = numpy.sqrt(-results.height/results.a_curve)
 
+
 # Solve for a 2D parabola ray map (see visualization)
 two_map.append(0) # insert first bc scalar divides are horrible
 
 for i in range(1,visualization_radius):
+    # WORK IN (CM) FOR THIS SECTION- WRITE OUT ABSOLUTE MAGNIFICATION VALUES THO PLS
 
     # Current Ray Direction for a point on the droplet plane (cm)
     current_rad = radius * i / visualization_radius
@@ -88,7 +90,7 @@ for i in range(1,visualization_radius):
     refracted_angle = numpy.arcsin(numpy.sin(refracted_angle)*index_refraction_glass)
     slope = numpy.tan(refracted_angle)
     final_position += platform_height*slope
-    
+
     predicted_position = (current_rad/platform_height)*(platform_height+platform_thickness+viewpoint_height)
     two_map.append(final_position/predicted_position) # Append a ratio value, ratio to straight-line final position on OBJECT PLANE
 
