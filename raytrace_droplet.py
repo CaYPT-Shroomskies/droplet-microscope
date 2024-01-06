@@ -13,15 +13,15 @@ import droplet_service as module
 index_refraction_water = 1.33
 index_refraction_glass = 1.52
 
-resolution = 1000
-block_size = 50 # Size of black and white tiles (px)
-visualization_radius = 400 # radius of droplet in pixels
+resolution = 3000
+block_size = 300 # Size of black and white tiles (px)
+visualization_radius = 1500 # radius of droplet in pixels
 
 
 
-viewpoint_height = 20 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
+viewpoint_height = 10 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
 platform_height = 10 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
-platform_thickness = 1 # Thickness of the glass panel
+platform_thickness = 0.02 # Thickness of the glass panel
 
 
 # UNSAFE - SHARED CLASS TYPE, CHECK WITH [draw_graphs.py]
@@ -33,8 +33,8 @@ class droplet_params():
 
 
 droplet = droplet_params(
-    volume = 1,
-    sl_se_constant = 0.01
+    volume = 3,
+    sl_se_constant = 0.08
 )
 
 # General Functions
@@ -69,31 +69,41 @@ for i in range(1,visualization_radius):
     # WORK IN (CM) FOR THIS SECTION- WRITE OUT ABSOLUTE MAGNIFICATION VALUES THO PLS
 
     # Current Ray Direction for a point on the droplet plane (cm)
-    current_rad = radius * i / visualization_radius
+    current_rad = radius * i / visualization_radius # Direction at which this ray points
+    predicted_position = (viewpoint_height/current_rad)*(platform_height+platform_thickness-viewpoint_height)
+
+    light_slope = -viewpoint_height/current_rad
+    light_angle = numpy.arctan(current_rad/viewpoint_height) 
+
+    # Intersection Quadratic
+    #print((light_slope**2) + 4*results.a_curve*(viewpoint_height-results.height))
+    intersect_radius = (-light_slope - numpy.sqrt( (light_slope**2) + results.a_curve*4*(viewpoint_height-results.height) ) ) / ( -2*results.a_curve ) # [CHECKED]
+
     # Solve for air-to-water refraction
-    intersection_height = results.a_curve*(current_rad**2) + results.height # Solve the equation
-    tangent_angle = numpy.arctan(results.a_curve * 2*current_rad) # take the derivative of the current x position (always negative), then convert it to radians
-    light_angle = numpy.arctan(current_rad/platform_height) # add later if there's a viewpoint height
-    normalized_angle = tangent_angle+light_angle
+    intersection_height = results.a_curve*(intersect_radius**2) + results.height # Solve the equation [CHECKED]
+    
+    tangent_angle = numpy.arctan(2 * results.a_curve * intersect_radius) # get the slope of the current x position (always negative), then convert it to radians
+    
+    normalized_angle = light_angle-tangent_angle
 
-    refracted_angle = numpy.arcsin(numpy.sin(normalized_angle)/index_refraction_water)-tangent_angle # that one guys law (shell???) # DOUBLE CHECK TANGENT ANGLE SUBTRACTION GEOMETRY #
-
-    slope = numpy.tan(refracted_angle)
-    final_position = current_rad + (intersection_height*slope) # Position when intersecting with glass
-
+    refracted_angle = numpy.arcsin(numpy.sin(normalized_angle)/index_refraction_water)+tangent_angle # that one guys law (shell???)
+    
+    final_position = intersect_radius + (numpy.tan(refracted_angle)*intersection_height) # Position when intersecting with glass [CHECKED]
+    
     # Glass-Water 
+    #print(numpy.arcsin(numpy.sin(refracted_angle)*index_refraction_water/index_refraction_glass)-refracted_angle)
+
     refracted_angle = numpy.arcsin(numpy.sin(refracted_angle)*index_refraction_water/index_refraction_glass)
     slope = numpy.tan(refracted_angle)
+    
     final_position += platform_thickness*slope
 
     # Glass-Air
     refracted_angle = numpy.arcsin(numpy.sin(refracted_angle)*index_refraction_glass)
-    slope = numpy.tan(refracted_angle)
-    final_position += platform_height*slope
+    final_position += platform_height*numpy.tan(refracted_angle)
 
-    predicted_position = (current_rad/platform_height)*(platform_height+platform_thickness+viewpoint_height)
     two_map.append(final_position/predicted_position) # Append a ratio value, ratio to straight-line final position on OBJECT PLANE
-
+print(two_map)
 # wrap to 3D and apply to grid
     
 
@@ -126,10 +136,10 @@ for y in range(resolution):
             #dist_y *= (platform_thickness+platform_height+viewpoint_height)/viewpoint_height
             
         # Return origin to 0,0 for rendering
-        dist_x += resolution/2
-        dist_y += resolution/2
+        coor_x = dist_x + resolution/2
+        coor_y = dist_y + resolution/2
 
-        if (dist_x//block_size)%2 == (dist_y//block_size)%2:
+        if (dist_x//block_size)%2 == (coor_y//block_size)%2:
             color = 255
         
         pxarray[x, y] = pygame.Color(color, color, color)
