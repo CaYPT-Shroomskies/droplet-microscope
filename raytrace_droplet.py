@@ -13,15 +13,15 @@ import droplet_service as module
 index_refraction_water = 1.33
 index_refraction_glass = 1.52
 
-resolution = 3000
-block_size = 300 # Size of black and white tiles (px)
-visualization_radius = 1500 # radius of droplet in pixels
+resolution = 1000
+block_size = 50 # Size of black and white tiles (px)
+visualization_radius = 200 # radius of droplet in pixels
 
 
 
-viewpoint_height = 10 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
-platform_height = 10 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
-platform_thickness = 0.02 # Thickness of the glass panel
+viewpoint_height = 20 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
+platform_height = 9.5 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
+platform_thickness = 0.5 # Thickness of the glass panel
 
 
 # UNSAFE - SHARED CLASS TYPE, CHECK WITH [draw_graphs.py]
@@ -34,7 +34,7 @@ class droplet_params():
 
 droplet = droplet_params(
     volume = 3,
-    sl_se_constant = 0.08
+    sl_se_constant = 0.02
 )
 
 # General Functions
@@ -70,7 +70,7 @@ for i in range(1,visualization_radius):
 
     # Current Ray Direction for a point on the droplet plane (cm)
     current_rad = radius * i / visualization_radius # Direction at which this ray points
-    predicted_position = (viewpoint_height/current_rad)*(platform_height+platform_thickness-viewpoint_height)
+    predicted_position = (current_rad/viewpoint_height)*(platform_height+platform_thickness+viewpoint_height)
 
     light_slope = -viewpoint_height/current_rad
     light_angle = numpy.arctan(current_rad/viewpoint_height) 
