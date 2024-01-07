@@ -20,7 +20,7 @@ visualization_radius = 200 # radius of droplet in pixels
 
 
 viewpoint_height = 10 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
-platform_height = 9.5 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
+platform_height = 5 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
 platform_thickness = 0.5 # Thickness of the glass panel
 
 
