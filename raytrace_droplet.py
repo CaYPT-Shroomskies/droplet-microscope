@@ -15,13 +15,13 @@ index_refraction_glass = 1.52
 
 resolution = 1000
 block_size = 50 # Size of black and white tiles (px)
-visualization_radius = 200 # radius of droplet in pixels
+visualization_radius = 400 # radius of droplet in pixels
 
 
 
 viewpoint_height = 10 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
-platform_height = 5 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
-platform_thickness = 0.5 # Thickness of the glass panel
+platform_height = 0.1 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
+platform_thickness = 1 # Thickness of the glass panel
 
 
 # UNSAFE - SHARED CLASS TYPE, CHECK WITH [draw_graphs.py]
@@ -33,8 +33,8 @@ class droplet_params():
 
 
 droplet = droplet_params(
-    volume = 3,
-    sl_se_constant = 0.02
+    volume = 1,
+    sl_se_constant = 0.08
 )
 
 # General Functions
@@ -66,8 +66,6 @@ radius = numpy.sqrt(-results.height/results.a_curve)
 two_map.append(0) # insert first bc scalar divides are horrible
 
 for i in range(1,visualization_radius):
-    # WORK IN (CM) FOR THIS SECTION- WRITE OUT ABSOLUTE MAGNIFICATION VALUES THO PLS
-
     # Current Ray Direction for a point on the droplet plane (cm)
     current_rad = radius * i / visualization_radius # Direction at which this ray points
     predicted_position = (current_rad/viewpoint_height)*(platform_height+platform_thickness+viewpoint_height)
@@ -103,7 +101,8 @@ for i in range(1,visualization_radius):
     final_position += platform_height*numpy.tan(refracted_angle)
 
     two_map.append(final_position/predicted_position) # Append a ratio value, ratio to straight-line final position on OBJECT PLANE
-print(two_map)
+
+print("Magnification Average:",int(numpy.mean(two_map)*100)/100)
 # wrap to 3D and apply to grid
     
 
