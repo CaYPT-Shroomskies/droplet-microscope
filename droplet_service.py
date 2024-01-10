@@ -21,6 +21,21 @@ Parabaloid visualization
 '''
 
 
+
+## PRECISION VARIABLES ##
+initialShape = - 0.1 # initial [a] value for the paraboloid
+initialStepSize = 0.03
+stepSizeGeometry = 0.5 # amount to multiply step value by at each split.
+watchdogTimeoutThreshold = 100000 # Timeout counter
+precision = 10 # Amount of geometric decreases in step size [Dont go over 30, FP limits are hit far below that]
+
+
+gravitationalPrecision = 30 # Amount of slices of parabola for which Eg is calculated.
+arcPrecision = 100 # amount of arcs represented in quarter parabola multiplied into area.
+
+sigfigs = 3 # Sigfigs of the results printed
+
+
 class results():
     a_curve = 0
     height = 0
@@ -38,17 +53,6 @@ def basic_solve(droplet):
 
     gravity = 9.81 # m/s^s
 
-
-    ## PRECISION VARIABLES ##
-    initialShape = - 0.1 # initial [a] value for the paraboloid
-    initialStepSize = 0.03
-    stepSizeGeometry = 0.5 # amount to multiply step value by at each split.
-    watchdogTimeoutThreshold = 100000 # Timeout counter
-    precision = 10 # Amount of geometric decreases in step size [Dont go over 30, FP limits are hit far below that]
-
-
-    gravitationalPrecision = 30 # Amount of slices of parabola for which Eg is calculated.
-    arcPrecision = 100 # amount of arcs represented in quarter parabola multiplied into area.
 
 
 
@@ -140,9 +144,9 @@ def basic_solve(droplet):
             exit()
 
     lastEnergy = math.floor(lastEnergy*(10**precision))/(10**precision)
-    print("Minimum energy reached.\n"+str(lastEnergy)+" mJ" )
+    print("Minimum energy reached.\n"+str(int(lastEnergy*10**sigfigs)/10**sigfigs)+" mJ" )
     print("Used "+str(watchdog)+" steps.")
-    print("Graph parameters: a = "+str(graph[-1][1])+", c = "+str(graph[-1][2])) # The last values in the graph
+    print("Graph parameters: a = "+str(int(graph[-1][1]*10**sigfigs)/10**sigfigs)+", c = "+str(int(graph[-1][2]*10**sigfigs)/10**sigfigs)) # The last values in the graph
 
 
     return_results = results()

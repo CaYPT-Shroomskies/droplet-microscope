@@ -1,5 +1,12 @@
 # Modules
 
+'''
+https://phys.libretexts.org/Bookshelves/University_Physics/Physics_(Boundless)/24%3A_Geometric_Optics/24.3%3A_Lenses
+Good for lensing ? im lensing guys :)
+
+'''
+
+
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
@@ -108,7 +115,7 @@ print("Magnification Average:",int(numpy.mean(two_map)*100)/100)
 
 pygame.init()
 window = pygame.display.set_mode((resolution, resolution))
-window.fill((120,120,120))
+window.fill((0,0,0))
 pygame.display.flip
 pxarray = pygame.PixelArray(window)
 
