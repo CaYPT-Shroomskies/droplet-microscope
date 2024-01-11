@@ -110,13 +110,13 @@ for i in range(1,visualization_radius):
     two_map.append(final_position/predicted_position) # Append a ratio value, ratio to straight-line final position on OBJECT PLANE
 
 print("Magnification Average:",int(numpy.mean(two_map)*100)/100)
+print("Droplet Radius:",int(radius*1000)/1000,"cm")
 # wrap to 3D and apply to grid
     
 
 pygame.init()
 window = pygame.display.set_mode((resolution, resolution))
 window.fill((0,0,0))
-pygame.display.flip
 pxarray = pygame.PixelArray(window)
 
 start_progress("Raytracing...")
@@ -150,7 +150,8 @@ for y in range(resolution):
         
         pxarray[x, y] = pygame.Color(color, color, color)
 
-    pygame.display.flip() # Remove to save like 10% of the time for interp + compi.
+    if y%100 == 0:
+        pygame.display.flip() # Remove to save like 10% of the time for interp + compi.
 
     progress(int((y/resolution)*100))
 
@@ -160,6 +161,9 @@ print("Trace Time: "+str( 1000*(time.process_time()-timer))+"ms")
 #pxarray.close()
 
 pygame.display.flip()
+
+# Calculate Focal Length [EXPERIMENTAL]
+
 
 
 while True:
