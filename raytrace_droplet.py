@@ -1,3 +1,4 @@
+
 # Modules
 
 '''
@@ -27,7 +28,7 @@ visualization_radius = 400 # radius of droplet in pixels
 
 
 viewpoint_height = 10 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
-platform_height = 0.1 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
+platform_height = 5 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
 platform_thickness = 1 # Thickness of the glass panel
 
 
@@ -164,9 +165,26 @@ pygame.display.flip()
 
 # Calculate Focal Length [EXPERIMENTAL]
 
+'''
+focal_mag = []
+for i in range(len(two_map)-1):
+    focal_mag.append(two_map[len(two_map)-(i+1)])
 
+
+for i in two_map:
+    focal_mag.append(i)
+'''
+'''
+focal_len = []
+for i in two_map:
+    if i > 0:
+        focal_len.append( ((platform_thickness+platform_height+viewpoint_height)/((1/i)+1)))
+
+print("Focal Length:",int((numpy.mean(focal_len)*1000))/1000,"cm")
+'''
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             break
+    pygame.display.flip()
