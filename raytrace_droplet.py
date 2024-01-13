@@ -21,14 +21,14 @@ import droplet_service as module
 index_refraction_water = 1.33
 index_refraction_glass = 1.52
 
-resolution = 1000
-block_size = 50 # Size of black and white tiles (px)
-visualization_radius = 400 # radius of droplet in pixels
+resolution = 600
+block_size = int(resolution/20) # Size of black and white tiles (px)
+visualization_radius = int(resolution*0.4) # radius of droplet in pixels
 
 
 
-viewpoint_height = 10 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
-platform_height = 5 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
+viewpoint_height = 2 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
+platform_height = 1 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
 platform_thickness = 1 # Thickness of the glass panel
 
 
@@ -111,6 +111,7 @@ for i in range(1,visualization_radius):
     two_map.append(final_position/predicted_position) # Append a ratio value, ratio to straight-line final position on OBJECT PLANE
 
 print("Magnification Average:",int(numpy.mean(two_map)*100)/100)
+print("Magnification STD:",int(numpy.std(numpy.array(two_map))*1000)/1000)
 print("Droplet Radius:",int(radius*1000)/1000,"cm")
 # wrap to 3D and apply to grid
     
