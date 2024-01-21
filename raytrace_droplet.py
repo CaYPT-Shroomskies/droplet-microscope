@@ -175,14 +175,14 @@ for i in range(len(two_map)-1):
 for i in two_map:
     focal_mag.append(i)
 '''
-'''
+
 focal_len = []
 for i in two_map:
     if i > 0:
         focal_len.append( ((platform_thickness+platform_height+viewpoint_height)/((1/i)+1)))
 
 print("Focal Length:",int((numpy.mean(focal_len)*1000))/1000,"cm")
-'''
+
 
 while True:
     for event in pygame.event.get():
