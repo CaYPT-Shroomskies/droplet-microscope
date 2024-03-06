@@ -21,8 +21,8 @@ import droplet_service as module
 index_refraction_water = 1.33
 index_refraction_glass = 1.52
 
-resolution = 600
-block_size = int(resolution/20) # Size of black and white tiles (px)
+resolution = 200
+block_size = int(resolution/80) # Size of black and white tiles (px)
 visualization_radius = int(resolution*0.4) # radius of droplet in pixels
 
 
@@ -185,7 +185,6 @@ print("Focal Length:",int((numpy.mean(focal_len)*1000))/1000,"cm")
 
 
 while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            break
-    pygame.display.flip()
+
+    time.sleep(200)
+    #pygame.display.flip()
