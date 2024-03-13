@@ -12,7 +12,6 @@ UTILIZE:
 
 - If things like precision need to be changed, they can be edited in the droplet_service script.
 
-
 '''
 
 # Class that our droplet_service module accepts as input
