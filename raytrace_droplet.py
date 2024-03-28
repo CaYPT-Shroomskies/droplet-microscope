@@ -21,7 +21,7 @@ import droplet_service as module
 index_refraction_water = 1.33
 index_refraction_glass = 1.52
 
-resolution = 200
+resolution = 1500
 block_size = int(resolution/80) # Size of black and white tiles (px)
 visualization_radius = int(resolution*0.4) # radius of droplet in pixels
 
