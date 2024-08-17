@@ -15,7 +15,7 @@ UTILIZE:
 '''
 
 # Class that our droplet_service module accepts as input
-class droplet_params():                                                                                                                                                                                    
+class droplet_params():                                                                                                                                                                            
     def __init__(self,volume=3,gl_se_constant=0.073,sl_se_constant=0.08):
         self.volume = volume #mL
         self.sl_se_constant = sl_se_constant # J/m^2

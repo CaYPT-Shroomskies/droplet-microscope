@@ -21,14 +21,14 @@ import droplet_service as module
 index_refraction_water = 1.33
 index_refraction_glass = 1.52
 
-resolution = 700
+resolution = 400
 block_size = int(resolution/20) # Size of black and white tiles (px)
 visualization_radius = int(resolution*0.4) # radius of droplet in pixels
 
 
 
-viewpoint_height = 2 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
-platform_height = 1 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
+viewpoint_height = 1.4 # Height ABOVE THE PLATFORM OF THE DROPLET (cm)
+platform_height = 1.8 # Height of droplet platform above patterened plane (cm) (TO BOTTOM OF PLATFORM)
 platform_thickness = 1 # Thickness of the glass panel
 
 
